@@ -133,11 +133,11 @@ function love.update(dt)
 
     if ball.x < 0 then
       servingPlayer = 1
-      player1Score = player1Score + 1
+      player2Score = player2Score + 1
       sounds['score']:play()
 
-      if player1Score == 10 then
-        winningPlayer = 1
+      if player2Score == 10 then
+        winningPlayer = 2
         gameState = 'done'
       else
         ball:reset()
@@ -147,11 +147,11 @@ function love.update(dt)
 
     if ball.x > VIRTUAL_WIDTH then
       servingPlayer = 2
-      player2Score = player2Score + 1
+      player1Score = player1Score + 1
       sounds['score']:play()
 
-      if player2Score == 10 then
-        winningPlayer = 2
+      if player1Score == 10 then
+        winningPlayer = 1
         gameState = 'done'
       else
         ball:reset()
@@ -218,7 +218,7 @@ function displayInfo()
     love.graphics.printf('Press [enter] to serve!', 0, 20, VIRTUAL_WIDTH, 'center')
   elseif gameState == 'done' then
     love.graphics.setFont(midFont)
-    love.graphics.printf('Player ' .. tostring(servingPlayer) .. ' wins!', 0, 10, VIRTUAL_WIDTH, 'center')
+    love.graphics.printf('Player ' .. tostring(winningPlayer) .. ' wins!', 0, 10, VIRTUAL_WIDTH, 'center')
     love.graphics.setFont(smallFont)
     love.graphics.printf('Press [enter] to restart!', 0, 30, VIRTUAL_WIDTH, 'center')
   end
