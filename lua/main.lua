@@ -44,12 +44,24 @@ function love.load()
 
   servingPlayer = 1
 
-  player1 = Paddle(10, 30, 5, 20)
-  player2 = Paddle(VIRTUAL_WIDTH - 15, VIRTUAL_HEIGHT - 50, 5, 20)
+  player1 = Paddle(10, VIRTUAL_HEIGHT / 2 - 20, 5, 20)
+  player2 = Paddle(VIRTUAL_WIDTH - 15, VIRTUAL_HEIGHT / 2 - 20, 5, 20)
 
   ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
   gameState = 'start'
+
+  -- Game mode to play against the AI (1) or other player (2)
+  gameMode = 1
+
+  -- Levels
+  level = 'easy'
+
+  levels = {
+    ['easy'] = 0.7,
+    ['medium'] = 0.6,
+    ['hard'] = 0.5
+  }
 end
 
 function love.resize(w, h)
@@ -61,7 +73,7 @@ function love.keypressed(key)
     love.event.quit()
   elseif key == 'enter' or key == 'return' then
     if gameState == 'start' then
-      gameState = 'serve'
+      gameState = 'choose-mode'
     elseif gameState == 'serve' then
       gameState = 'play'
     elseif gameState == 'done' then
@@ -77,6 +89,27 @@ function love.keypressed(key)
       else
         servingPlayer = 1
       end
+    end
+  elseif key == '1' or key == 'kp1' then
+    if gameState == 'choose-mode' then
+      gameMode = 1
+      gameState = 'choose-level'
+    elseif gameState == 'choose-level' then
+      level = 'easy'
+      gameState = 'serve'
+    end
+  elseif key == '2' or key == 'kp2' then
+    if gameState == 'choose-mode' then
+      gameMode = 2
+      gameState = 'serve'
+    elseif gameState == 'choose-level' then
+      level = 'medium'
+      gameState = 'serve'
+    end
+  elseif key == '3' or key == 'kp3' then
+    if gameState == 'choose-level' then
+      level = 'hard'
+      gameState = 'serve'
     end
   end
 end
@@ -157,7 +190,7 @@ function love.update(dt)
         ball:reset()
         gameState = 'serve'
       end
-  end
+    end
 
     ball:update(dt)
   end
@@ -170,12 +203,26 @@ function love.update(dt)
     player1.dy = 0
   end
 
-  if love.keyboard.isDown('up') then
-    player2.dy = -PADDLE_SPEED
-  elseif (love.keyboard.isDown('down')) then
-    player2.dy = PADDLE_SPEED
+  if gameMode == 2 then
+    if love.keyboard.isDown('up') then
+      player2.dy = -PADDLE_SPEED
+    elseif (love.keyboard.isDown('down')) then
+      player2.dy = PADDLE_SPEED
+    else
+      player2.dy = 0
+    end
   else
-    player2.dy = 0
+    local responseDistance = ball.x / player2.x
+
+    if responseDistance > levels[level] then
+      if ball.y < player2.y then
+        player2.dy = -PADDLE_SPEED
+      elseif ball.y > player2.y + 20 then
+        player2.dy = PADDLE_SPEED
+      else
+        player2.dy = 0
+      end
+    end
   end
 
   player1:update(dt)
@@ -213,6 +260,17 @@ function displayInfo()
   if gameState == 'start' then
     love.graphics.printf('Welcome to Pong!', 0, 10, VIRTUAL_WIDTH, 'center')
     love.graphics.printf('Press [enter] to begin!', 0, 20, VIRTUAL_WIDTH, 'center')
+  elseif gameState == 'choose-mode' then
+    love.graphics.printf('Choose the game mode', 0, 10, VIRTUAL_WIDTH, 'center')
+
+    love.graphics.printf('[1] AI mode', 0, 30, VIRTUAL_WIDTH, 'center')
+    love.graphics.printf('[2] Two players mode', 0, 40, VIRTUAL_WIDTH, 'center')
+  elseif gameState == 'choose-level' then
+    love.graphics.printf('Choose the game level', 0, 10, VIRTUAL_WIDTH, 'center')
+
+    love.graphics.printf('[1] Easy', 0, 30, VIRTUAL_WIDTH, 'center')
+    love.graphics.printf('[2] Medium', 0, 40, VIRTUAL_WIDTH, 'center')
+    love.graphics.printf('[3] Hard', 0, 50, VIRTUAL_WIDTH, 'center')
   elseif gameState == 'serve' then
     love.graphics.printf('Player ' .. tostring(servingPlayer) .. '\'s serve!', 0, 10, VIRTUAL_WIDTH, 'center')
     love.graphics.printf('Press [enter] to serve!', 0, 20, VIRTUAL_WIDTH, 'center')
