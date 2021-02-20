@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "module": "es6",
+    "target": "es5",
+    "allowJs": true,
+    "noEmitOnError": true,
+  },
+  "exclude": ["webpack.config.js"]
+}
