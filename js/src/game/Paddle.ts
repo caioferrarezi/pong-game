@@ -1,5 +1,4 @@
-import canvas from 'canvas/index';
-
+import { GAME_HEIGHT } from '@/utils';
 export default class Paddle {
   x: number;
   y: number;
@@ -23,12 +22,12 @@ export default class Paddle {
     if (this.dy < 0) {
       this.y = Math.max(Math.floor(this.y + this.dy * delta), 0);
     } else {
-      this.y = Math.min(Math.floor(this.y + this.dy * delta), canvas.height - this.height);
+      this.y = Math.min(Math.floor(this.y + this.dy * delta), GAME_HEIGHT - this.height);
     }
   }
 
-  render(): void {
-    canvas.context.fillStyle = '#ffffff';
-    canvas.context.fillRect(this.x, this.y, this.width, this.height);
+  render(context: CanvasRenderingContext2D): void {
+    context.fillStyle = '#ffffff';
+    context.fillRect(this.x, this.y, this.width, this.height);
   }
 }

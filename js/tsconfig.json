@@ -6,6 +6,12 @@
     "target": "es5",
     "allowJs": true,
     "noEmitOnError": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"],
+      "@*": ["src/*"]
+    }
   },
   "exclude": ["webpack.config.js"]
 }

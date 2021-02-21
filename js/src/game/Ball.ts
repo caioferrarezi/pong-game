@@ -1,5 +1,4 @@
-import canvas from "canvas/index";
-import Paddle from "game/Paddle";
+import Paddle from "@/game/Paddle";
 
 export default class Ball {
   x: number;
@@ -39,8 +38,8 @@ export default class Ball {
     this.y += Math.floor(this.dy * delta);
   }
 
-  render(): void {
-    canvas.context.fillStyle = '#ffffff';
-    canvas.context.fillRect(this.x, this.y, this.width, this.height);
+  render(context: CanvasRenderingContext2D): void {
+    context.fillStyle = '#ffffff';
+    context.fillRect(this.x, this.y, this.width, this.height);
   }
 }

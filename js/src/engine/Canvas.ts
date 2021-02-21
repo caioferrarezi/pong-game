@@ -1,9 +1,9 @@
-export class Canvas {
-  width: number;
-  height: number;
+export default class Canvas {
+  private width: number;
+  private height: number;
 
-  canvas: HTMLCanvasElement;
-  context: CanvasRenderingContext2D;
+  private canvas: HTMLCanvasElement;
+  private context: CanvasRenderingContext2D;
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -13,12 +13,12 @@ export class Canvas {
     this.canvas.width = this.width;
     this.canvas.height = this.height;
 
-    this.context = this.canvas.getContext('2d');
-
     document.body.insertAdjacentElement('afterbegin', this.canvas);
   }
+
+  getContext(): CanvasRenderingContext2D {
+    this.context = this.canvas.getContext('2d');
+
+    return this.context;
+  }
 }
-
-const canvas = new Canvas(768, 432);
-
-export default canvas;

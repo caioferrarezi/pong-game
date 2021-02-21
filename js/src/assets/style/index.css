@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'RetroGaming';
-  src: url('assets/fonts/retrogaming.ttf');
+  src: url('@/assets/fonts/retrogaming.ttf');
 }
 
 * {
@@ -25,9 +25,8 @@ body {
 
 canvas {
   display: block;
-  width: 1280px;
-  height: auto;
-  max-width: 100%;
+  width: auto;
+  height: 90%;
   image-rendering: -moz-crisp-edges;
   image-rendering: -webkit-crisp-edges;
   image-rendering: pixelated;

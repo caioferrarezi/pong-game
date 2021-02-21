@@ -1,19 +1,21 @@
-import canvas from 'canvas/index';
+import Engine from '@/engine';
+import Paddle from '@/game/Paddle';
+import Ball from '@/game/Ball';
 
-import Paddle from 'game/Paddle';
-import Ball from 'game/Ball';
-import keyboard from 'keyboard/index';
+import {
+  PADDLE_SPEED,
+  BALL_SPEED,
+  GAME_WIDTH,
+  GAME_HEIGHT
+} from '@/utils/index'
 
-const PADDLE_SPEED = 300;
-const BALL_SPEED = 250;
-
-const score = require('assets/audio/score.wav');
-const paddleHit = require('assets/audio/paddle_hit.wav');
-const wallHit = require('assets/audio/wall_hit.wav');
-class Game {
-  ball: Ball;
+const { default: score } = require('@/assets/audio/score.wav');
+const { default: paddleHit } = require('@/assets/audio/paddle_hit.wav');
+const { default: wallHit } = require('@/assets/audio/wall_hit.wav');
+export default class Game extends Engine {
   state: string;
 
+  ball: Ball;
   player1: Paddle;
   player2: Paddle;
 
@@ -27,31 +29,11 @@ class Game {
   servingPlayer: number;
 
   constructor() {
-    this.state = 'serve';
-    this.servingPlayer = Math.floor(Math.random() * (3 - 1) + 1);
-
-    this.ball = new Ball(canvas.width / 2 - 5, canvas.height / 2 - 5);
-
-    this.player1 = new Paddle(20, canvas.height / 2 - 20);
-    this.player2 = new Paddle(canvas.width - 30, canvas.height / 2 - 20);
-
-    this.player1Score = 0;
-    this.player2Score = 0;
-
-    this.ball.dx = this.servingPlayer === 1 ? BALL_SPEED : -BALL_SPEED;
-    this.ball.dy = Math.floor(Math.random() * (BALL_SPEED - 100) + 100);
-
-    this.scoreSound = new Audio(score.default);
-    this.paddleHitSound = new Audio(paddleHit.default);
-    this.wallHitSound = new Audio(wallHit.default);
-
-    this.scoreSound.volume = 0.4;
-    this.paddleHitSound.volume = 0.4;
-    this.wallHitSound.volume = 0.4;
+    super(GAME_WIDTH, GAME_HEIGHT);
   }
 
   reset(): void {
-    this.ball = new Ball(canvas.width / 2 - 5, canvas.height / 2 - 5);
+    this.ball = new Ball(GAME_WIDTH / 2 - 5, GAME_HEIGHT / 2 - 5);
     this.ball.dx = this.servingPlayer === 1 ? BALL_SPEED : -BALL_SPEED;
     this.ball.dy = Math.floor(Math.random() * (BALL_SPEED - 10) + 10);
   }
@@ -64,18 +46,42 @@ class Game {
     }
   }
 
+  setup(): void {
+    this.state = 'serve';
+    this.servingPlayer = Math.floor(Math.random() * (3 - 1) + 1);
+
+    this.ball = new Ball(GAME_WIDTH / 2 - 5, GAME_HEIGHT / 2 - 5);
+
+    this.player1 = new Paddle(20, GAME_HEIGHT / 2 - 20);
+    this.player2 = new Paddle(GAME_WIDTH - 30, GAME_HEIGHT / 2 - 20);
+
+    this.player1Score = 0;
+    this.player2Score = 0;
+
+    this.ball.dx = this.servingPlayer === 1 ? BALL_SPEED : -BALL_SPEED;
+    this.ball.dy = Math.floor(Math.random() * (BALL_SPEED - 100) + 100);
+
+    this.scoreSound = new Audio(score);
+    this.paddleHitSound = new Audio(paddleHit);
+    this.wallHitSound = new Audio(wallHit);
+
+    this.scoreSound.volume = 0.3;
+    this.paddleHitSound.volume = 0.4;
+    this.wallHitSound.volume = 0.4;
+  }
+
   update(delta: number): void {
-    if (keyboard.isDown('KeyW')) {
+    if (this.keyboard.isDown('KeyW')) {
       this.player1.dy = -PADDLE_SPEED;
-    } else if (keyboard.isDown('KeyS')) {
+    } else if (this.keyboard.isDown('KeyS')) {
       this.player1.dy = PADDLE_SPEED;
     } else {
       this.player1.dy = 0;
     }
 
-    if (keyboard.isDown('ArrowUp')) {
+    if (this.keyboard.isDown('ArrowUp')) {
       this.player2.dy = -PADDLE_SPEED;
-    } else if (keyboard.isDown('ArrowDown')) {
+    } else if (this.keyboard.isDown('ArrowDown')) {
       this.player2.dy = PADDLE_SPEED;
     } else {
       this.player2.dy = 0;
@@ -112,8 +118,8 @@ class Game {
         this.ball.dy = -this.ball.dy;
 
         this.wallHitSound.play()
-      } else if (this.ball.y + this.ball.height >= canvas.height) {
-        this.ball.y = canvas.height - this.ball.height - 1;
+      } else if (this.ball.y + this.ball.height >= GAME_HEIGHT) {
+        this.ball.y = GAME_HEIGHT - this.ball.height - 1;
         this.ball.dy = -this.ball.dy;
 
         this.wallHitSound.play()
@@ -128,7 +134,7 @@ class Game {
         this.scoreSound.play();
 
         return;
-      } else if (this.ball.x > canvas.width) {
+      } else if (this.ball.x > GAME_WIDTH) {
         this.servingPlayer = 1;
         this.player1Score += 1;
         this.state = 'serve';
@@ -148,35 +154,32 @@ class Game {
 
   render(): void {
     // Render background
-    canvas.context.fillStyle = '#282d34';
-    canvas.context.fillRect(0, 0, canvas.width, canvas.height);
+    this.context.fillStyle = '#282d34';
+    this.context.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
     // Render text
-    canvas.context.fillStyle = '#ffffff';
-    canvas.context.textAlign = 'center';
-    canvas.context.textBaseline = 'middle';
+    this.context.fillStyle = '#ffffff';
+    this.context.textAlign = 'center';
+    this.context.textBaseline = 'middle';
 
     if (this.state === 'serve') {
-      canvas.context.font = '32px RetroGaming';
-      canvas.context.fillText(`Player ${this.servingPlayer}\'s serving`, canvas.width / 2, 48);
+      this.context.font = '32px RetroGaming';
+      this.context.fillText(`Player ${this.servingPlayer}\'s serving`, GAME_WIDTH / 2, 48);
 
-      canvas.context.font = '16px RetroGaming';
-      canvas.context.fillText(`Press [space] or [enter] to play`, canvas.width / 2, 80);
+      this.context.font = '16px RetroGaming';
+      this.context.fillText(`Press [space] or [enter] to play`, GAME_WIDTH / 2, 80);
     }
 
     // Render score
-    canvas.context.textAlign = 'center';
-    canvas.context.textBaseline = 'bottom';
-    canvas.context.font = '64px RetroGaming';
-    canvas.context.fillText(this.player1Score.toString(), canvas.width / 2 - 64, canvas.height / 2 - 15);
-    canvas.context.fillText(this.player2Score.toString(), canvas.width / 2 + 64, canvas.height / 2 - 15);
+    this.context.textAlign = 'center';
+    this.context.textBaseline = 'bottom';
+    this.context.font = '64px RetroGaming';
+    this.context.fillText(this.player1Score.toString(), GAME_WIDTH / 2 - 64, GAME_HEIGHT / 2 - 15);
+    this.context.fillText(this.player2Score.toString(), GAME_WIDTH / 2 + 64, GAME_HEIGHT / 2 - 15);
 
-    this.ball.render();
+    this.ball.render(this.context);
 
-    this.player1.render();
-    this.player2.render();
+    this.player1.render(this.context);
+    this.player2.render(this.context);
   }
 }
-
-const game = new Game();
-export default game;
