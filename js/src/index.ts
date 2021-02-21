@@ -1,6 +1,8 @@
 import keyboard from 'keyboard/index';
 import game from 'game/index';
 
+import 'assets/style/index.css';
+
 let oldTimelapse = 0;
 let elapsedTime = 0;
 

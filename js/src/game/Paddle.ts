@@ -9,7 +9,7 @@ export default class Paddle {
   width: number;
   height: number;
 
-  constructor(x: number, y: number, width = 5, height = 20) {
+  constructor(x: number, y: number, width = 10, height = 40) {
     this.x = x;
     this.y = y;
 
@@ -21,9 +21,9 @@ export default class Paddle {
 
   update(delta: number): void {
     if (this.dy < 0) {
-      this.y = Math.max(Math.ceil(this.y - 1 + this.dy * delta), 0);
+      this.y = Math.max(Math.floor(this.y + this.dy * delta), 0);
     } else {
-      this.y = Math.min(Math.ceil(this.y + this.dy * delta), canvas.height - 20);
+      this.y = Math.min(Math.floor(this.y + this.dy * delta), canvas.height - this.height);
     }
   }
 

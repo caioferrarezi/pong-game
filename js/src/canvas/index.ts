@@ -19,6 +19,6 @@ export class Canvas {
   }
 }
 
-const canvas = new Canvas(432, 243);
+const canvas = new Canvas(768, 432);
 
 export default canvas;

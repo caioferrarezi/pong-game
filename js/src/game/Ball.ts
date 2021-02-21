@@ -18,8 +18,8 @@ export default class Ball {
     this.dx = 0;
     this.dy = 0;
 
-    this.width = 5;
-    this.height = 5;
+    this.width = 10;
+    this.height = 10;
   }
 
   collides(paddle: Paddle): boolean {
@@ -35,11 +35,8 @@ export default class Ball {
   }
 
   update(delta: number): void {
-    let adjustX = this.dx < 0 ? 1 : 0;
-    let adjustY = this.dy < 0 ? 1 : 0;
-
-    this.x += Math.ceil(this.dx * delta - adjustX);
-    this.y += Math.ceil(this.dy * delta - adjustY);
+    this.x += Math.floor(this.dx * delta);
+    this.y += Math.floor(this.dy * delta);
   }
 
   render(): void {
