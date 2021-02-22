@@ -1,6 +1,6 @@
 # Pong :ping_pong:
 
-![pong screenshot](https://github.com/caioferrarezi/snake-game/blob/master/pong-game.png)
+![pong screenshot](https://github.com/caioferrarezi/pong-game/blob/master/pong-game.png)
 
 This is just a playground to implement the pong game, based on the implementation learned on [CS50 course](https://cs50.harvard.edu/x/).
 
