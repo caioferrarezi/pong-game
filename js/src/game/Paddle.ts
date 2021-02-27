@@ -20,9 +20,9 @@ export default class Paddle {
 
   update(delta: number): void {
     if (this.dy < 0) {
-      this.y = Math.max(Math.floor(this.y + this.dy * delta), 0);
+      this.y = Math.max(this.y + this.dy * delta, 0);
     } else {
-      this.y = Math.min(Math.floor(this.y + this.dy * delta), GAME_HEIGHT - this.height);
+      this.y = Math.min(this.y + this.dy * delta, GAME_HEIGHT - this.height);
     }
   }
 

@@ -34,8 +34,8 @@ export default class Ball {
   }
 
   update(delta: number): void {
-    this.x += Math.floor(this.dx * delta);
-    this.y += Math.floor(this.dy * delta);
+    this.x += this.dx * delta;
+    this.y += this.dy * delta;
   }
 
   render(context: CanvasRenderingContext2D): void {

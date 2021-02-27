@@ -100,22 +100,6 @@ export default class Game extends Engine {
   }
 
   update(delta: number): void {
-    if (this.keyboard.isDown('KeyW')) {
-      this.player1.dy = -PADDLE_SPEED;
-    } else if (this.keyboard.isDown('KeyS')) {
-      this.player1.dy = PADDLE_SPEED;
-    } else {
-      this.player1.dy = 0;
-    }
-
-    if (this.keyboard.isDown('ArrowUp')) {
-      this.player2.dy = -PADDLE_SPEED;
-    } else if (this.keyboard.isDown('ArrowDown')) {
-      this.player2.dy = PADDLE_SPEED;
-    } else {
-      this.player2.dy = 0;
-    }
-
     if (this.state === 'play') {
       if (this.ball.collides(this.player1)) {
         this.ball.x = this.player1.x + this.player1.width;
@@ -169,6 +153,24 @@ export default class Game extends Engine {
       } else if (this.player2Score === 3) {
         this.winningPlayer = 2;
         this.state = 'end';
+      }
+    }
+
+    if (this.keyboard.isDown('KeyW')) {
+      this.player1.dy = -PADDLE_SPEED;
+    } else if (this.keyboard.isDown('KeyS')) {
+      this.player1.dy = PADDLE_SPEED;
+    } else {
+      this.player1.dy = 0;
+    }
+
+    if (this.ball.x > GAME_WIDTH / 2) {
+      if (this.ball.y < this.player2.y) {
+        this.player2.dy = -PADDLE_SPEED;
+      } else if (this.ball.y > this.player2.y + this.player2.height) {
+        this.player2.dy = PADDLE_SPEED
+      } else {
+        this.player2.dy = 0
       }
     }
 

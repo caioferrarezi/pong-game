@@ -31,13 +31,13 @@ export default abstract class Engine {
 
   abstract render(): void;
 
-  setupListeners(): void {
+  private setupListeners(): void {
     document.addEventListener('keypress', event => this.onKeyPress(event.code));
     document.addEventListener('keydown', event => this.keyboard.add(event.code));
     document.addEventListener('keyup', event => this.keyboard.remove(event.code));
   }
 
-  loop(timestamp: number): void {
+  private loop(timestamp: number): void {
     this.elapsedTime = (timestamp - this.oldTimestamp) / 1000;
     this.oldTimestamp = timestamp;
 
